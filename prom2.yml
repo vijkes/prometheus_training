@@ -1,0 +1,43 @@
+static_configs:
+      - targets: ["localhost:9090"]
+
+
+  - job_name: "myallnodestatic"
+    file_sd_configs:
+    - files:
+      - myfiletarget.yml
+    relabel_configs:
+      - source_labels: [env]
+        regex: 'prod.*'
+        target_label: env
+        replacement: "Testing12"
+
+  - job_name: "myec2"
+    ec2_sd_configs:
+      - access_key: AKIAQS43GWWXLXW6FUWT
+        secret_key: aXuCrqX6v1G3MWVfO7uTFCHzD18DX9jj4rKGpfCB
+        region: ap-south-1
+    relabel_configs:
+      - source_labels: [__meta_ec2_public_ip]
+        regex: "(.*)"
+        target_label: __address__
+        replacement: "${1}:9100"
+      - source_labels: [__meta_ec2_tag_region]
+        regex: "(.*)"
+        target_label: Region
+        replacement: "${1}"
+      - source_labels: [__meta_ec2_tag_team]
+        regex: "(.*)"
+        target_label: Team
+        replacement: "${1}"
+      - source_labels: [__meta_ec2_tag_env]
+        regex: "(.*)"
+        target_label: Env
+        replacement: "${1}"
+      - source_labels: [__meta_ec2_tag_Name]
+        regex: "(.*)"
+        target_label: Name
+        replacement: "${1}"
+      - source_labels: [Team]
+        regex: devops
+        action: keep
