@@ -1,0 +1,44 @@
+#prom.yml
+
+ # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: "prometheus"
+
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: "linuxnode1"
+    static_configs:
+      - targets: ["18.219.107.241:9100"]
+        labels:
+          group: 'prod'
+          region: "china"
+          team: 'DEV'
+
+  - job_name: "linuxnode2"
+    static_configs:
+      - targets: ["52.15.219.21:9100"]
+        labels:
+          group: 'development'
+          region: "IND"
+          team: 'web'
+
+  - job_name: "docker"
+    static_configs:
+      - targets: ["3.144.175.155:9323"]
+        labels:
+          group: 'container'
+          region: "RUSSIA"
+          team: 'image'
+
+
+
+- source_labels: [env]
+        regex: 'container'
+        target_label: env2
+        replacement: "Container"
+        
+        
+       
